@@ -1,0 +1,33 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# ===== Entorno virtual =====
+.venv/
+venv/
+env/
+
+# ===== Secretos / credenciales (NO subir) =====
+.streamlit/secrets.toml
+
+# ===== Editor / SO =====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ===== Archivos temporales / diagnóstico =====
+_*.log
+_*.py
+_diag*.txt
+_probe*.txt
+*.log
+
+# ===== Excel completo (demasiado grande para GitHub) =====
+# El ITEM MASTER original pesa ~88 MB. NO se sube: en su lugar viaja
+# data/catalogo.xlsx (versión liviana generada con generar_catalogo.py).
+data/ITEM MASTER ORIGINAL - Copia.xlsx
+data/*.xlsx
+!data/catalogo.xlsx

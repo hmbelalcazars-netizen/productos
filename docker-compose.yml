@@ -1,0 +1,19 @@
+services:
+  dashboard:
+    build: .
+    image: dashboard-catalogo:latest
+    container_name: dashboard-catalogo
+    ports:
+      # Host 8600 -> contenedor 8501. Se usa 8600 para evitar choques con
+      # otros procesos locales en 8501. En el servidor puedes volver a 8501.
+      - "8600:8501"
+    restart: unless-stopped
+    environment:
+      # Ruta del Excel liviano dentro del contenedor (incluido vía COPY . .)
+      ARCHIVO_EXCEL: "/app/data/catalogo.xlsx"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
