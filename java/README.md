@@ -1,11 +1,11 @@
 # Conversor Excel → JSON en Java
 
-Equivalente en **Java** del script Python `../generar_json.py`. Lee el Excel del
-catálogo y escribe `../docs/catalogo.json` en el mismo formato compacto que
-consume la web.
+Conversor del catálogo: lee el Excel y escribe `../docs/catalogo.json` en el
+formato compacto que consume la web. Es la herramienta oficial para regenerar
+los datos (reemplazó a un script Python previo).
 
-Se verificó que la salida es **idéntica byte por byte** a la que genera el
-script Python (mismo tamaño y mismo hash SHA-256 sobre los 108k+ productos).
+Su salida se validó **byte por byte** (mismo tamaño y mismo hash SHA-256 sobre
+los 108k+ productos) contra la del script Python original antes de retirarlo.
 
 ## Por qué no usa Apache POI ni Maven
 

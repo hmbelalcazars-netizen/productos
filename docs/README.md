@@ -72,18 +72,21 @@ Luego abre: http://127.0.0.1:8899/
 
 ## Actualizar los datos
 
-Cuando cambie el catálogo, regenera `catalogo.json` desde el Excel:
+Cuando cambie el catálogo, regenera `catalogo.json` desde el Excel con el
+conversor Java (ver `../java/README.md`):
 
 ```powershell
-# desde la carpeta ReporteProductos
-.\.venv\Scripts\python.exe generar_json.py
+# desde la carpeta java
+javac GenerarJson.java
+java GenerarJson
 # o apuntando a otro Excel:
-.\.venv\Scripts\python.exe generar_json.py "ruta\al\ITEM MASTER.xlsx"
+java GenerarJson "ruta\al\ITEM MASTER.xlsx"
 ```
 
-Lee la hoja `MASTER_ITEM` y las columnas `COD_ITEM`, `DESCRIPCION`,
-`MACROCATEGORIA`, `CATEGORIA`, `SUBCATEGORIA`, `FECHA_CREACION`.
-El resultado se escribe en `docs/catalogo.json`.
+También puedes hacer doble clic en `java\Generar JSON (Java).bat`.
+
+Lee las columnas `COD_ITEM`, `DESCRIPCION`, `MACROCATEGORIA`, `CATEGORIA`,
+`SUBCATEGORIA`, `FECHA_CREACION` y escribe el resultado en `docs/catalogo.json`.
 
 ## Formato de `catalogo.json`
 
