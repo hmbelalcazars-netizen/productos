@@ -27,7 +27,7 @@ docs/
   versión SUELTA.
 - Vista **Catálogo** (tarjetas con imagen) y vista **Tabla** (con miniaturas).
 - Imágenes por SKU contra el API público
-  `http://api.corporaciongpf.com/fotos/fybeca/{SKU}.jpg` (más `_2`, `_3`).
+  `https://api.corporaciongpf.com/fotos/fybeca/{SKU}.jpg` (más `_2`, `_3`).
   Si una imagen no existe, la tarjeta muestra "Sin imagen" automáticamente.
 - Galería por producto (imagen principal + adicionales).
 - Exportar a Excel (`.xlsx`) de los productos filtrados, con la URL de imagen
@@ -67,11 +67,8 @@ Luego abre: http://127.0.0.1:8899/
 5. A los pocos minutos la web queda publicada en una URL como
    `https://<usuario>.github.io/<repo>/`.
 
-> Aviso importante: GitHub Pages sirve por **HTTPS**. Las imágenes apuntan a
-> `http://api.corporaciongpf.com`, y el navegador **bloquea** contenido HTTP
-> dentro de una página HTTPS (contenido mixto). En Pages las tarjetas se verán
-> como "Sin imagen" salvo que el API tenga versión `https://`. Si el API
-> soporta HTTPS, cambia `API_IMAGENES_BASE` en `app.js` a `https://`.
+> El API de imágenes responde por `https://`, por lo que las imágenes cargan
+> correctamente también en GitHub Pages (servido por HTTPS).
 
 ## Actualizar los datos
 

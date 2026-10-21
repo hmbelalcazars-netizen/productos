@@ -4,7 +4,7 @@
    ========================================================= */
 
 // ----------------------- Configuración -----------------------
-const API_IMAGENES_BASE = "http://api.corporaciongpf.com/fotos/fybeca/";
+const API_IMAGENES_BASE = "https://api.corporaciongpf.com/fotos/fybeca/";
 const MAX_IMAGENES_ADICIONALES = 2;   // SKU_2, SKU_3
 const MAX_RESULTADOS_CATALOGO = 60;   // tarjetas visibles por página
 const MAX_FILAS_TABLA = 500;          // filas de tabla por página
