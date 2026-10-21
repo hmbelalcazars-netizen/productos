@@ -22,7 +22,7 @@ echo (Deja esta ventana abierta mientras lo muestras. Cierrala para apagar el se
 REM Abrir el navegador despues de un breve retraso
 start "" cmd /c "timeout /t 2 >nul & start http://127.0.0.1:%PUERTO%/"
 
-REM Arrancar el servidor sirviendo la carpeta web
-"%PY%" -m http.server %PUERTO% --bind 127.0.0.1 --directory web
+REM Arrancar el servidor sirviendo la carpeta docs
+"%PY%" -m http.server %PUERTO% --bind 127.0.0.1 --directory docs
 
 endlocal

@@ -1,5 +1,5 @@
 """
-Genera web/catalogo.json a partir del Excel del catálogo.
+Genera docs/catalogo.json a partir del Excel del catálogo.
 
 Extrae solo las columnas que usa el dashboard y las serializa a JSON para
 que la versión web (HTML + JavaScript) las cargue directamente en el navegador,
@@ -34,7 +34,7 @@ else:
     completo = BASE_DIR / "data" / "ITEM MASTER ORIGINAL - Copia.xlsx"
     origen = ligero if ligero.exists() else completo
 
-destino = BASE_DIR / "web" / "catalogo.json"
+destino = BASE_DIR / "docs" / "catalogo.json"
 destino.parent.mkdir(parents=True, exist_ok=True)
 
 if not origen.exists():
