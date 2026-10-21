@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos · Fybeca</title>
+    <link rel="icon" type="image/png" href="logo_fybeca.png">
+    <link rel="stylesheet" href="styles.css">
+    <!-- SheetJS para exportar a Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+</head>
+<body>
+    <main class="contenedor">
+        <header class="cabecera">
+            <div class="marca">
+                <img src="logo_fybeca.png" alt="Fybeca" class="logo">
+                <div>
+                    <h1 class="titulo">Catálogo de Productos</h1>
+                    <p class="subtitulo">Consulta y revisión del catálogo con imágenes por SKU</p>
+                </div>
+            </div>
+            <div class="badges">
+                <span class="badge" id="badge-total">Cargando…</span>
+                <span class="badge badge-img oculto" id="badge-img"></span>
+            </div>
+        </header>
+
+        <div id="estado-carga" class="estado-carga">Cargando catálogo…</div>
+
+        <section id="app" class="oculto">
+            <!-- Buscador -->
+            <h2 class="section-title">🔎 Buscar producto</h2>
+            <input type="search" id="buscar" class="input-buscar"
+                   placeholder="Ingrese SKU o nombre del producto…" autocomplete="off">
+
+            <!-- Filtros -->
+            <h2 class="section-title">🎯 Filtrar catálogo</h2>
+            <div class="grid-filtros">
+                <label>Macrocategoría
+                    <select id="f-macro"></select>
+                </label>
+                <label>Categoría
+                    <select id="f-categoria"></select>
+                </label>
+                <label>Subcategoría
+                    <select id="f-subcategoria"></select>
+                </label>
+                <label>Año
+                    <select id="f-anio"></select>
+                </label>
+                <label>Mes
+                    <select id="f-mes"></select>
+                </label>
+                <label>Día
+                    <select id="f-dia"></select>
+                </label>
+            </div>
+
+            <div class="barra-acciones">
+                <button id="btn-limpiar" class="btn btn-secundario" type="button">Limpiar filtros</button>
+                <button id="btn-exportar" class="btn btn-primario" type="button">⬇️ Exportar a Excel</button>
+            </div>
+
+            <hr class="linea">
+
+            <!-- Resultados -->
+            <div class="fila-resultados">
+                <h2 class="section-title" id="contador-resultados">📋 Resultados</h2>
+                <div class="vista-toggle" role="tablist">
+                    <button class="btn-vista activa" data-vista="catalogo" type="button">🖼️ Catálogo</button>
+                    <button class="btn-vista" data-vista="tabla" type="button">📋 Tabla</button>
+                </div>
+            </div>
+
+            <p id="aviso-limite" class="aviso oculto"></p>
+
+            <!-- Vista catálogo -->
+            <div id="vista-catalogo" class="grid-productos"></div>
+
+            <!-- Vista tabla -->
+            <div id="vista-tabla" class="oculto tabla-scroll">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Macrocategoría</th>
+                            <th>Categoría</th>
+                            <th>Subcategoría</th>
+                            <th>Fecha de creación</th>
+                            <th>Imagen</th>
+                            <th>Miniatura</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body"></tbody>
+                </table>
+            </div>
+
+            <div id="paginacion" class="paginacion oculto">
+                <button id="btn-mas" class="btn btn-secundario" type="button">Mostrar más</button>
+            </div>
+        </section>
+
+        <footer class="pie">
+            Catálogo de Productos · Reporte para consulta y revisión
+        </footer>
+    </main>
+
+    <!-- Modal galería -->
+    <div id="modal" class="modal oculto">
+        <div class="modal-fondo" data-cerrar></div>
+        <div class="modal-caja">
+            <button class="modal-cerrar" data-cerrar type="button">✕</button>
+            <h3 id="modal-titulo"></h3>
+            <div id="modal-galeria" class="modal-galeria"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
