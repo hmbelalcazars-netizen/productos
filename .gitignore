@@ -1,19 +1,5 @@
-# ===== Python =====
-__pycache__/
-*.py[cod]
-*.egg-info/
-.pytest_cache/
-
 # ===== Java (binarios compilados) =====
 *.class
-
-# ===== Entorno virtual =====
-.venv/
-venv/
-env/
-
-# ===== Secretos / credenciales (NO subir) =====
-.streamlit/secrets.toml
 
 # ===== Editor / SO =====
 .vscode/
@@ -22,15 +8,13 @@ env/
 Thumbs.db
 
 # ===== Archivos temporales / diagnóstico =====
-_*.log
-_*.py
-_diag*.txt
-_probe*.txt
+*.tmp
 *.log
 
 # ===== Excel completo (demasiado grande para GitHub) =====
 # El ITEM MASTER original pesa ~88 MB. NO se sube: en su lugar viaja
-# data/catalogo.xlsx (versión liviana generada con generar_catalogo.py).
+# data/catalogo.xlsx (versión liviana). El JSON para la web se genera
+# con el conversor Java (java/GenerarJson.java) hacia docs/catalogo.json.
 data/ITEM MASTER ORIGINAL - Copia.xlsx
 data/*.xlsx
 !data/catalogo.xlsx

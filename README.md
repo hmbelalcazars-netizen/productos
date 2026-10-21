@@ -1,126 +1,69 @@
-# Dashboard Catálogo de Productos
+# Catálogo de Productos — Fybeca
 
-Dashboard web (Streamlit) que lee el catálogo desde un archivo Excel y cruza
-las imágenes de cada producto por SKU contra el API público de imágenes:
+Catálogo web de productos con imágenes por SKU. Es un **sitio estático**
+(HTML + CSS + JavaScript) que se publica en GitHub Pages, más un **conversor
+en Java** que genera los datos desde el Excel maestro.
 
-```
-https://api.corporaciongpf.com/fotos/fybeca/{SKU}.jpg
-```
+No usa Python ni ningún backend.
 
-No requiere credenciales: el API de imágenes es público.
-
-## Estructura relevante
+## Estructura
 
 ```
-app.py                 Aplicación principal (Streamlit)
-requirements.txt       Dependencias (versiones fijas)
-data/                  Excel del catálogo (viaja con el proyecto)
-assets/                Logos y estilos (reserva de marca)
-.streamlit/config.toml Configuración del servidor Streamlit
-Dockerfile             Imagen de despliegue
-docker-compose.yml     Orquestación de 1 servicio
+docs/                 La web (lo que se publica)
+  index.html          Estructura
+  styles.css          Estilos
+  app.js              Lógica: carga, buscador, filtros, dedupe, vistas, export
+  catalogo.json       Datos (generados desde el Excel)
+  logo_fybeca.png     Logo / favicon
+java/                 Herramientas en Java (sin dependencias, solo el JDK)
+  GenerarJson.java    Conversor Excel -> docs/catalogo.json
+  ServidorWeb.java    Servidor estático local para ver la web
+  *.bat, README.md    Lanzadores y documentación
+data/                 Excel del catálogo (origen de los datos)
+Abrir Catalogo.bat    Lanzador: arranca el servidor y abre el navegador
 ```
 
-> Importante: una app Streamlit **no es un sitio HTML estático**. Se ejecuta
-> como un servicio (`streamlit run`) que escucha en un puerto. El "index" es
-> la propia aplicación servida en `/`.
+## Requisitos
 
-## El archivo Excel
+- **JDK 11 o superior** (probado con Java 21). Nada más.
 
-El ITEM MASTER original pesa ~88 MB (demasiado para GitHub). Por eso en el
-repositorio viaja **`data/catalogo.xlsx`**, una versión liviana (~4-5 MB) que
-contiene solo las 6 columnas que usa el dashboard.
+## Ver la web en local
 
-El dashboard resuelve la ruta del Excel en este orden:
+Doble clic en **`Abrir Catalogo.bat`**. Compila el servidor si hace falta,
+lo arranca en `http://127.0.0.1:8899/` y abre el navegador. Deja la ventana
+abierta mientras lo usas; ciérrala para apagar el servidor.
 
-1. Variable de entorno `ARCHIVO_EXCEL` (recomendado en servidor/Docker).
-2. `data/catalogo.xlsx` (versión liviana que viaja en el repositorio).
-3. `data/ITEM MASTER ORIGINAL - Copia.xlsx` (archivo completo, si está).
-4. (Solo desarrollo local en Windows) la carpeta OneDrive del usuario.
+> No funciona abrir `docs/index.html` con doble clic: el navegador bloquea la
+> lectura del catálogo por el protocolo `file://`. Hay que servirlo por HTTP,
+> que es justo lo que hace el lanzador.
 
-### Actualizar los datos
+## Actualizar los datos (Excel -> JSON)
 
-Cuando cambie el ITEM MASTER, regenera el Excel liviano:
+Cuando cambie el catálogo, regenera `docs/catalogo.json`:
 
 ```powershell
-python generar_catalogo.py "ruta\al\ITEM MASTER ORIGINAL.xlsx"
+# desde la carpeta java
+javac GenerarJson.java
+java GenerarJson
+# o apuntando a otro Excel:
+java GenerarJson "C:\ruta\al\ITEM MASTER.xlsx"
 ```
 
-Esto reescribe `data/catalogo.xlsx`. Luego haz commit y push (o reconstruye
-la imagen Docker).
+O doble clic en `java\Generar JSON (Java).bat`. Detalles en `java/README.md`.
 
-La hoja leída es `MASTER_ITEM` y debe contener las columnas:
-`COD_ITEM`, `DESCRIPCION`, `MACROCATEGORIA`, `CATEGORIA`, `SUBCATEGORIA`,
-`FECHA_CREACION`.
+El Excel debe tener la hoja de datos con las columnas `COD_ITEM`,
+`DESCRIPCION`, `MACROCATEGORIA`, `CATEGORIA`, `SUBCATEGORIA`, `FECHA_CREACION`.
 
-## Ejecución local (desarrollo)
+## Publicar en GitHub Pages
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m streamlit run app.py
-```
+En **Settings → Pages**: *Deploy from a branch*, rama `main`, carpeta `/docs`.
+La web queda en `https://<usuario>.github.io/<repo>/`.
 
-Abre http://localhost:8501
+Las imágenes se sirven por `https://api.corporaciongpf.com/fotos/fybeca/{SKU}.jpg`,
+que responde por HTTPS, así que cargan también en Pages.
 
-## Despliegue con Docker (recomendado)
+## Imágenes
 
-Requiere Docker instalado en el servidor.
-
-```bash
-# Construir y arrancar
-docker compose up -d --build
-
-# Ver estado y logs
-docker compose ps
-docker compose logs -f
-
-# Detener
-docker compose down
-```
-
-La app queda en `http://<ip-del-servidor>:8501`.
-
-### Sin docker-compose (solo Docker)
-
-```bash
-docker build -t dashboard-catalogo .
-docker run -d --name dashboard-catalogo -p 8501:8501 --restart unless-stopped dashboard-catalogo
-```
-
-## Publicar en el puerto 80 / HTTPS
-
-Para servir en el puerto 80 (o 443 con TLS), coloca un proxy inverso
-(nginx, Traefik o Caddy) delante del contenedor y reenvía al `8501`.
-Ejemplo mínimo de nginx:
-
-```nginx
-server {
-    listen 80;
-    server_name catalogo.tudominio.com;
-
-    location / {
-        proxy_pass http://127.0.0.1:8501;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
-}
-```
-
-Streamlit usa WebSockets, por eso son necesarias las cabeceras `Upgrade` y
-`Connection`.
-
-## Requisitos de red
-
-El servidor debe poder llegar por HTTPS a `api.corporaciongpf.com` para
-descargar las imágenes de los productos.
-
-## Seguridad
-
-- El dashboard no usa credenciales: el API de imágenes es público. El antiguo
-  `.streamlit/secrets.toml` con credenciales WebDAV fue eliminado. Si en el
-  futuro agregas secretos, ese archivo está excluido vía `.gitignore` /
-  `.dockerignore`.
+Se cargan por SKU desde el API público; si una no existe, la tarjeta muestra
+"Sin imagen". El servidor donde se abra la web necesita acceso a internet para
+ver las imágenes.
